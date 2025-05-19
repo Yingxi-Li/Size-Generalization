@@ -1,17 +1,9 @@
 import cvxpy as cp 
 import numpy as np
 import networkx as nx
-from scipy.linalg import sqrtm, null_space
-from numpy.linalg import matrix_rank
-
-from utils.graph_generation import generate_graph, sample_one_small_graph, generate_durer, sample_one_small_graph, complete_minus_two
-from utils.ip_solver import max_cut_ip
-from utils.sparsification import sparsify_graph
-
-from decimal import Decimal, getcontext
+from scipy.linalg import sqrtm
 
 import matplotlib.pyplot as plt
-from decimal import Decimal, getcontext
     
     
 def sdp_laplace(G, laplacian=None):

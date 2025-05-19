@@ -2,10 +2,10 @@ import matplotlib.pyplot as plt
 import numpy as np 
 import networkx as nx
 
-from greedy import greedy1, greedy2
+from greedy import greedy1, greedy2, naive_greedy
 from utils.graph_generation import generate_graph, sample_one_small_graph, relabel_graph_nodes, generate_durer
 from utils.ip_solver import max_cut_ip
-from sdp import sdp2, sdp_laplace, goeman_williamson, sdp_dual, max_qp
+from sdp import sdp_laplace, goeman_williamson, sdp_dual, max_qp
 
 import time 
 
@@ -51,7 +51,7 @@ def multiple_lines_ci(x, y, ci, line, colors, label, fig_name, do_save=False, ba
         plt.fill_between(x, np.array(y[i]) - np.array(ci[i]), np.array(y[i]) + np.array(ci[i]), color=colors[i], alpha=0.2)
  
     if do_save:
-        plt.savefig("figures/neurips_v2/" + fig_name)
+        plt.savefig("figures/" + fig_name)
 
 def run_multiple_sample_sizes(sample_sizes, num_trails, graph_size):
     """
@@ -216,14 +216,13 @@ def run_multiple_algorithms(G, sample_percents, num_trails, algs, fig_name):
         ys.append(y)
         cis.append(ci)
         baselines.append(y[-1])
-    
+        
     multiple_lines_ci(x = sample_percents, 
                       y = ys, 
                       ci = cis, 
-                      labels = algs, 
-                      x_name = None, 
-                      y_name = None, 
-                      title = "Erdos-Renyi", 
+                      label = algs, 
+                      line = ["o-", "o-"],
+                      colors = ["blue", "orange"],
                       fig_name = fig_name, 
                       do_save = True, 
                       baseline = baselines)
@@ -264,5 +263,5 @@ if __name__ == "__main__":
                 sample_percents = [0.2, 0.4, 0.6, 0.8, 1], 
                 num_trails = num_trail, 
                 algs = ['GW', "Greedy"],
-                fig_name = f"good_examples/erdos_renyi_{i}_{density}.pdf")
+                fig_name = f"erdos_renyi_{i}_{density}.pdf")
     

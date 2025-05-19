@@ -108,6 +108,51 @@ def greedy2(G, percent_sampled = 0.3):
     best_cut_weight = nx.cut_size(G, left, right, weight="weight")
         
     return left, best_cut_weight, S
+
+def sample_cut(G):
+    """
+    Sample a random cut of the graph.
+    """
+    left = []
+    right = []
+    for node in G.nodes():
+        if np.random.rand() > 0.5:
+            left.append(node)
+        else:
+            right.append(node)
+    return left, right
     
     
+def naive_greedy(G, num_rand_init = 10, verbose = False):
+    """
+    Naive greedy algorithm for the max cut problem.
+    """
     
+    best_cut_weight = 0
+    best_cut = []
+    W = nx.get_edge_attributes(G, "weight")
+    
+    for _ in range(num_rand_init):
+        if verbose:
+            print("---------------Random Initialization------------------")
+        left, right = sample_cut(G)
+        
+        rand_order = np.random.permutation(G.nodes())
+        
+        for node in rand_order:
+            if node in left:
+                left.remove(node)
+            else:
+                right.remove(node)
+            left, right = choose_side(node, left, right, G, W)
+            if verbose:
+                print("Current weight: ", nx.cut_size(G, left, right, weight="weight"))
+            
+        cut_weight = nx.cut_size(G, left, right, weight="weight")
+        if cut_weight > best_cut_weight:
+            best_cut = left 
+            best_cut_weight = cut_weight
+        if verbose:
+            print("Updated best cut weight: ", best_cut_weight)
+        
+        return best_cut, best_cut_weight
